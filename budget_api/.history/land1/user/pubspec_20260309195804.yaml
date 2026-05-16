@@ -1,0 +1,60 @@
+name: landdevelop
+description: A complete Flutter Firebase Authentication app
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+    cupertino_icons: ^1.0.8
+    pdf: ^3.10.7
+  path_provider: ^2.1.3
+  open_file: ^3.3.
+
+  # Firebase Core Services
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
+  firebase_storage: ^12.1.2
+  mapbox_search: ^4.4.0
+
+  # UI & Utility Packages
+  google_fonts: ^6.2.1
+  intl: ^0.20.2
+  uuid: ^4.0.1
+  geocoding: ^3.0.0
+  google_generative_ai: ^0.4.7
+
+  # Device & Media Access
+  image_picker: ^1.1.2
+  permission_handler: ^11.0.1
+  geolocator: ^13.0.1
+  google_maps_flutter: ^2.6.0
+  map_location_picker: ^1.3.4
+  url_launcher: ^6.3.0
+  maps_launcher: ^3.0.0
+  flutter_map: ^8.2.2
+  latlong2: ^0.9.1
+  flutter_launcher_icons: ^0.13.1 
+
+# Add this configuration block at the end of the file
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
+  # Optional: You can remove the default Flutter icon on Android by setting this to true
+  remove_alpha_ios: true
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+     - assets/images/

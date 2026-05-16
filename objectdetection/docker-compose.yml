@@ -1,0 +1,35 @@
+# ============================================================
+#  Temple Heritage Monitor — Docker Compose
+#
+#  Usage:
+#    docker-compose up --build        # Build and run
+#    docker-compose up -d             # Run in background
+#    docker-compose down              # Stop and remove
+#    docker-compose logs -f           # Stream logs
+# ============================================================
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: temple-monitor-api
+    ports:
+      - "5000:5000"
+    volumes:
+      # Persist SQLite database across container restarts
+      - temple-data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OMP_NUM_THREADS=4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+volumes:
+  temple-data:
+    driver: local

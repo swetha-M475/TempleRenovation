@@ -1,0 +1,4 @@
+# This directory stores the SQLite database file (temple_heritage.db).
+# It is created automatically at application startup.
+# Do not commit the .db file to version control.
+*.db

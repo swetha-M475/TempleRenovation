@@ -1,0 +1,28 @@
+name: landdevelop
+description: A complete Flutter Firebase Authentication app
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+
+  
+# Add this configuration block at the end of the file
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
+  # Optional: You can remove the default Flutter icon on Android by setting this to true
+  remove_alpha_ios: true
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+     - assets/images/

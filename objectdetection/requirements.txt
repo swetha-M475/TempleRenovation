@@ -1,0 +1,15 @@
+flask==3.0.3
+flask-cors==4.0.0
+ultralytics==8.2.18
+opencv-python-headless==4.9.0.80
+scikit-image==0.23.2
+imagehash==4.3.1
+Pillow==10.3.0
+numpy==1.26.4
+torch==2.3.0
+torchvision==0.18.0
+scipy==1.13.0
+# Optional: for ONNX model export and inference
+# onnx==1.16.1
+# onnxruntime==1.18.0
+

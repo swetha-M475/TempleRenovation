@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temple Heritage Monitor — AI-Powered Structural Analysis</title>
+    <meta name="description" content="South Indian Temple Heritage Monitoring & Structural Analysis System. AI-powered object detection, SSIM comparison, and domain-aware validation for cultural preservation.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Ambient background -->
+    <div class="ambient-bg">
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2"></div>
+        <div class="ambient-orb orb-3"></div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toast-container"></div>
+
+    <!-- Warning banner (hidden by default) -->
+    <div id="warningBanner" class="warning-banner" style="display:none">
+        <span>⚠️ Model not loaded — detection unavailable</span>
+    </div>
+
+    <!-- Header -->
+    <header id="app-header">
+        <div class="header-content">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 2L4 14V38H36V14L20 2Z" stroke="url(#logoGrad)" stroke-width="2.5" fill="none"/>
+                        <path d="M16 38V24H24V38" stroke="url(#logoGrad)" stroke-width="2"/>
+                        <path d="M20 2L20 10" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="20" cy="18" r="3" fill="url(#logoGrad)"/>
+                        <defs>
+                            <linearGradient id="logoGrad" x1="4" y1="2" x2="36" y2="38">
+                                <stop stop-color="#F59E0B"/>
+                                <stop offset="1" stop-color="#D97706"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="logo-title">Temple Heritage Monitor</h1>
+                    <p class="logo-subtitle">AI-Powered Structural Analysis System</p>
+                </div>
+            </div>
+            <nav class="nav-tabs" id="navTabs">
+                <button class="nav-tab active" data-tab="analyze" id="navAnalyze">
+                    <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                        <rect x="3" y="3" width="14" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <circle cx="8" cy="8" r="1.5" fill="currentColor"/>
+                        <path d="M17 13l-4-4-6 8" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    Analyze
+                </button>
+                <button class="nav-tab" data-tab="compare" id="navCompare">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
+                        <rect x="1" y="3" width="7" height="14" rx="1"/>
+                        <rect x="12" y="3" width="7" height="14" rx="1"/>
+                        <path d="M10 7v6" stroke-dasharray="2 2"/>
+                    </svg>
+                    Compare
+                </button>
+                <button class="nav-tab" data-tab="about" id="navAbout">
+                    <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                    About
+                </button>
+                <div class="nav-indicator" id="navIndicator"></div>
+            </nav>
+            <div class="header-status" id="headerStatus">
+                <span class="status-dot"></span>
+                <span>System Ready</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-main">
+
+        <!-- ═══ ANALYZE TAB ═══ -->
+        <section class="tab-content active" id="tab-analyze">
+            <div class="section-header">
+                <h2>Single Image Analysis</h2>
+                <p>Upload a temple image for AI-powered object detection and structural assessment</p>
+            </div>
+
+            <div class="upload-container">
+                <div class="drop-zone" id="dropZone1">
+                    <div class="drop-zone-content" id="dropContent1">
+                        <div class="drop-icon">
+                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M24 32V16M24 16L18 22M24 16L30 22"/>
+                                <path d="M8 32V36C8 38.2 9.8 40 12 40H36C38.2 40 40 38.2 40 36V32"/>
+                            </svg>
+                        </div>
+                        <p class="drop-title">Drop temple image here</p>
+                        <p class="drop-subtitle">or click to browse &bull; JPG, PNG, WebP &bull; Max 20 MB</p>
+                    </div>
+                    <div class="drop-preview" id="preview1" style="display:none">
+                        <img id="previewImg1" alt="Preview">
+                        <button class="remove-btn" id="removeBtn1" title="Remove image">✕</button>
+                    </div>
+                    <input type="file" id="fileInput1" accept="image/jpeg,image/png,image/webp" hidden>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="analyze-btn" id="btn-analyze" disabled>
+                    <span class="btn-text">Analyze Image</span>
+                    <span class="btn-loader" style="display:none">
+                        <span class="spinner"></span>
+                        Processing...
+                    </span>
+                </button>
+            </div>
+
+            <!-- Analysis Results -->
+            <div class="results-container" id="analyzeResults" style="display:none">
+                <!-- Annotated Image + Detections -->
+                <div class="result-grid">
+                    <div class="glass-card annotated-card">
+                        <h3>🔍 Annotated Detection</h3>
+                        <div class="image-wrapper">
+                            <canvas id="canvas-analyze" width="640" height="480"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-card detections-card">
+                        <h3>📦 Detected Objects</h3>
+                        <div id="detectionsList"></div>
+                    </div>
+                </div>
+
+                <!-- Quality + Orientation -->
+                <div class="quality-grid" id="qualityGrid"></div>
+
+                <!-- Domain Interpretation -->
+                <div class="glass-card interp-card">
+                    <h3>📋 Domain Interpretation</h3>
+                    <div class="interp-text" id="interpText"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ COMPARE TAB ═══ -->
+        <section class="tab-content" id="tab-compare">
+            <div class="section-header">
+                <h2>Image Comparison</h2>
+                <p>Upload two images to detect structural changes, SSIM similarity, and anomalies</p>
+            </div>
+
+            <div class="compare-upload-container">
+                <div class="drop-zone" id="dropZone2">
+                    <div class="drop-zone-content" id="dropContent2">
+                        <div class="drop-icon">
+                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M24 32V16M24 16L18 22M24 16L30 22"/>
+                                <path d="M8 32V36C8 38.2 9.8 40 12 40H36C38.2 40 40 38.2 40 36V32"/>
+                            </svg>
+                        </div>
+                        <p class="drop-title">Image 1 — Previous</p>
+                        <p class="drop-subtitle">Reference / baseline image</p>
+                    </div>
+                    <div class="drop-preview" id="preview2" style="display:none">
+                        <img id="previewImg2" alt="Preview 1">
+                        <button class="remove-btn" id="removeBtn2" title="Remove">✕</button>
+                    </div>
+                    <input type="file" id="fileInput2" accept="image/jpeg,image/png,image/webp" hidden>
+                </div>
+
+                <div class="compare-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12H19M19 12L13 6M19 12L13 18"/>
+                    </svg>
+                </div>
+
+                <div class="drop-zone" id="dropZone3">
+                    <div class="drop-zone-content" id="dropContent3">
+                        <div class="drop-icon">
+                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M24 32V16M24 16L18 22M24 16L30 22"/>
+                                <path d="M8 32V36C8 38.2 9.8 40 12 40H36C38.2 40 40 38.2 40 36V32"/>
+                            </svg>
+                        </div>
+                        <p class="drop-title">Image 2 — Current</p>
+                        <p class="drop-subtitle">Latest inspection image</p>
+                    </div>
+                    <div class="drop-preview" id="preview3" style="display:none">
+                        <img id="previewImg3" alt="Preview 2">
+                        <button class="remove-btn" id="removeBtn3" title="Remove">✕</button>
+                    </div>
+                    <input type="file" id="fileInput3" accept="image/jpeg,image/png,image/webp" hidden>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="analyze-btn" id="btn-compare" disabled>
+                    <span class="btn-text">Compare Images</span>
+                    <span class="btn-loader" style="display:none">
+                        <span class="spinner"></span>
+                        Comparing...
+                    </span>
+                </button>
+            </div>
+
+            <!-- Comparison Results -->
+            <div class="results-container" id="compareResults" style="display:none">
+
+                <!-- SSIM Score -->
+                <div class="glass-card ssim-card">
+                    <div class="ssim-layout">
+                        <div class="ssim-circle" id="ssimCircle">
+                            <svg viewBox="0 0 120 120">
+                                <circle class="circle-bg" cx="60" cy="60" r="50"/>
+                                <circle class="circle-fill" id="ssimFill" cx="60" cy="60" r="50"
+                                    stroke-dasharray="314.159" stroke-dashoffset="314.159"/>
+                            </svg>
+                            <div class="circle-text">
+                                <span class="score-num" id="ssimScoreNum">0</span>
+                                <span class="score-label">SSIM</span>
+                            </div>
+                        </div>
+                        <div class="ssim-info">
+                            <h3 id="ssimLabel">Calculating...</h3>
+                            <p id="ssimInterpretation"></p>
+                            <div class="ssim-meta" id="ssimMeta"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side by side detections -->
+                <div class="compare-grid">
+                    <div class="glass-card">
+                        <h3>Image 1 Detections</h3>
+                        <div class="image-wrapper">
+                            <img id="compareImg1" alt="Image 1 annotated">
+                        </div>
+                        <div id="compareDetList1"></div>
+                    </div>
+                    <div class="glass-card">
+                        <h3>Image 2 Detections</h3>
+                        <div class="image-wrapper image-wrapper-overlay">
+                            <img id="compareImg2" alt="Image 2 annotated">
+                            <img id="diffOverlay" class="diff-overlay" alt="Diff overlay" style="display:none">
+                        </div>
+                        <button class="diff-toggle-btn" id="diffToggle" style="display:none">
+                            <span>🔬</span> Show Differences
+                        </button>
+                        <div id="compareDetList2"></div>
+                    </div>
+                </div>
+
+                <!-- Change Summary -->
+                <div class="glass-card">
+                    <h3>📊 Change Analysis</h3>
+                    <div class="change-summary-grid" id="changeSummaryGrid"></div>
+                    <div id="changeDetails"></div>
+                </div>
+
+                <!-- Anomalies -->
+                <div id="anomaliesSection"></div>
+
+                <!-- Duplicate check -->
+                <div class="glass-card" id="dupCard" style="display:none">
+                    <h3>🔁 Duplicate Check</h3>
+                    <p id="dupInfo"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ ABOUT TAB ═══ -->
+        <section class="tab-content" id="tab-about">
+            <div class="section-header">
+                <h2>About This System</h2>
+                <p>South Indian Temple Heritage Monitoring & Structural Analysis</p>
+            </div>
+            <div class="about-content">
+                <div class="glass-card">
+                    <h3>🛕 Purpose</h3>
+                    <p>This system uses AI-powered computer vision to monitor and analyze South Indian temple heritage sites. It detects key structural elements — Lingam, Nandhi, Temple Structures, Sheds, and inferred Avudaiyar bases — and tracks changes between inspection images over time.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>🔬 Technology</h3>
+                    <ul>
+                        <li><strong>Object Detection:</strong> YOLOv8 custom-trained model with Test-Time Augmentation (TTA)</li>
+                        <li><strong>Image Quality:</strong> Laplacian blur detection, brightness & noise analysis</li>
+                        <li><strong>Similarity:</strong> SSIM (Structural Similarity Index) with structural vs illumination change classification</li>
+                        <li><strong>Change Detection:</strong> IoU-based object matching with anomaly detection</li>
+                        <li><strong>Domain Validation:</strong> South Indian temple spatial relationship rules</li>
+                        <li><strong>Duplicate Detection:</strong> Perceptual hashing (pHash)</li>
+                    </ul>
+                </div>
+                <div class="glass-card">
+                    <h3>📐 Architecture</h3>
+                    <ul>
+                        <li><strong>Backend:</strong> Flask REST API with OpenCV, scikit-image, PyTorch</li>
+                        <li><strong>Frontend:</strong> Vanilla HTML/CSS/JS — zero external frameworks</li>
+                        <li><strong>Model:</strong> Custom YOLOv8 trained on South Indian temple dataset</li>
+                    </ul>
+                </div>
+                <div class="glass-card">
+                    <h3>🏛️ Detected Classes</h3>
+                    <div class="class-badges">
+                        <span class="class-badge badge-lingam">🕉️ Lingam</span>
+                        <span class="class-badge badge-nandhi">🐂 Nandhi</span>
+                        <span class="class-badge badge-temple">🛕 Temple Structure</span>
+                        <span class="class-badge badge-shed">🏚️ Shed / Auxiliary</span>
+                        <span class="class-badge badge-avudaiyar">⬡ Avudaiyar (Inferred)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="app-footer">
+        <p>Temple Heritage Monitor v1.0 — Built for Cultural Preservation</p>
+    </footer>
+
+    <script src="js/upload.js" defer></script>
+    <script src="js/results.js" defer></script>
+    <script src="js/app.js" defer></script>
+</body>
+</html>

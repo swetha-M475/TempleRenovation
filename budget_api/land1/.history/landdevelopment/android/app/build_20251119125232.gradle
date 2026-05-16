@@ -1,0 +1,68 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "com.google.gms.google-services"
+}
+
+android {
+    namespace "com.example.landdevelop"
+    compileSdkVersion 34
+
+    defaultConfig {
+        applicationId "com.example.landdevelop"
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+
+        multiDexEnabled true
+
+        // Required for Firebase Phone Auth (no SHA1 needed)
+        manifestPlaceholders = [
+                appAuthRedirectScheme: "com.google.firebase.auth"
+        ]
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.0"
+
+    // Firebase BOM
+    implementation platform('com.google.firebase:firebase-bom:32.7.0')
+
+    // Firebase services
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-storage'
+    implementation 'com.google.firebase:firebase-analytics'
+
+    // For multidex support
+    implementation 'androidx.multidex:multidex:2.0.1'
+}
+
+apply plugin: "com.google.gms.google-services"

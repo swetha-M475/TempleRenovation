@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "39473406312",
+    "project_id": "barrenlanddevleopment",
+    "storage_bucket": "barrenlanddevleopment.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39473406312:android:e71b33b729c567b09c76dd",
+        "android_client_info": {
+          "package_name": "com.example.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmSiEFBTwbFdd5TLzdLPqXNzZh18Sh1Ag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39473406312:android:b7a75e61f9fbea1c9c76dd",
+        "android_client_info": {
+          "package_name": "com.example.landdevelop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmSiEFBTwbFdd5TLzdLPqXNzZh18Sh1Ag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,34 @@
+# Virtual environments
+.venv*/
+venv*/
+__pycache__/
+*.pyc
+*.pyo
+
+# Database files (will be created at runtime)
+data/*.db
+
+# Test files
+test_api.py
+test*.jpg
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Docs
+README.md
+*.md

@@ -1,0 +1,177 @@
+{
+  "roofing_concrete": {
+    "description": "Concrete roofing construction over statue or temple area",
+    "materials": "cement, sand, steel rods, aggregate",
+    "labor_days": 7,
+    "unit": "per_sqft",
+    "keywords": ["concrete roof", "RCC roof", "cement roof", "top cover", "roofing"]
+  },
+  "roofing_shed": {
+    "description": "Pillar based shed construction using metal or asbestos sheets",
+    "materials": "MS pillars, roofing sheets, bolts, welding materials",
+    "labor_days": 4,
+    "unit": "per_sqft",
+    "keywords": ["shed", "pillar shed", "metal shed", "sheet roof", "shade construction"]
+  },
+  "flooring_tiles": {
+    "description": "Tile flooring installation around statue or temple area",
+    "materials": "vitrified tiles, adhesive, grout, sand",
+    "labor_days": 3,
+    "unit": "per_sqft",
+    "keywords": ["tile", "tiles", "flooring", "tile floor", "vitrified"]
+  },
+  "flooring_cement": {
+    "description": "Cement flooring construction around statue or temple area",
+    "materials": "cement, sand, aggregate, curing materials",
+    "labor_days": 2,
+    "unit": "per_sqft",
+    "keywords": ["cement floor", "concrete floor", "plain floor", "flooring", "cement laying"]
+  },
+  "fencing": {
+    "description": "Protective fencing installation around statue or temple",
+    "materials": "MS pipes, iron rods, welding materials, paint",
+    "labor_days": 3,
+    "unit": "per_meter",
+    "keywords": ["fence", "fencing", "boundary", "protection", "iron fence", "grille"]
+  },
+  "chemical_washing": {
+    "description": "Deep chemical cleaning of statue surface to remove moss, algae and stains",
+    "materials": "cleaning chemicals, protective coating, brushes",
+    "labor_days": 1,
+    "unit": "per_sqft",
+    "keywords": ["chemical wash", "cleaning", "moss removal", "stain", "dirty", "algae", "wash"]
+  },
+  "lighting_installation": {
+    "description": "Electrical lighting setup around statue or temple area",
+    "materials": "LED lights, wiring, switches, conduit pipes, MCB",
+    "labor_days": 2,
+    "unit": "per_unit",
+    "keywords": ["light", "lighting", "LED", "electrical", "illumination", "bulb", "spotlight"]
+  },
+  "painting_general": {
+    "description": "General painting work on walls or structures around statue",
+    "materials": "exterior paint, primer, brushes, rollers",
+    "labor_days": 2,
+    "unit": "per_sqft",
+    "keywords": ["paint", "painting", "color", "colour", "wall paint", "exterior paint"]
+  },
+  "lingam_painting": {
+    "description": "Traditional sacred painting of Shiva Lingam with holy colors",
+    "materials": "sacred paint, holy ash, vermillion, brushes",
+    "labor_days": 1,
+    "unit": "per_unit",
+    "keywords": ["lingam", "linga", "shiva lingam", "lingam paint", "lingam color"]
+  },
+  "avudai_painting": {
+    "description": "Painting of Avudai (base pedestal of Lingam) with traditional colors",
+    "materials": "sacred paint, primer, brushes",
+    "labor_days": 1,
+    "unit": "per_unit",
+    "keywords": ["avudai", "avudaiyar", "pedestal paint", "base paint", "lingam base"]
+  },
+  "nandhi_painting": {
+    "description": "Traditional painting of Nandhi (bull statue) with sacred colors",
+    "materials": "sacred paint, primer, brushes, gold paint",
+    "labor_days": 1,
+    "unit": "per_unit",
+    "keywords": ["nandhi", "nandi", "bull statue", "nandhi paint", "bull paint"]
+  },
+  "shed_painting": {
+    "description": "Painting of shed structure including pillars and roof sheets",
+    "materials": "metal paint, anti-rust primer, brushes",
+    "labor_days": 2,
+    "unit": "per_sqft",
+    "keywords": ["shed paint", "pillar paint", "roof paint", "metal paint", "shed color"]
+  },
+  "floor_painting": {
+    "description": "Painting of floor surface with epoxy or floor paint",
+    "materials": "floor paint, epoxy coating, primer, rollers",
+    "labor_days": 1,
+    "unit": "per_sqft",
+    "keywords": ["floor paint", "floor color", "epoxy floor", "floor coating"]
+  },
+  "compound_wall": {
+    "description": "Construction of compound wall around statue or temple premises",
+    "materials": "bricks, cement, sand, steel rods",
+    "labor_days": 5,
+    "unit": "per_meter",
+    "keywords": ["compound wall", "boundary wall", "enclosure wall", "wall construction", "compound"]
+  },
+  "compound_wall_painting": {
+    "description": "Painting of compound wall with weather resistant paint",
+    "materials": "exterior paint, primer, putty, brushes",
+    "labor_days": 2,
+    "unit": "per_sqft",
+    "keywords": ["compound wall paint", "boundary wall paint", "wall painting", "compound paint"]
+  },
+  "lingam_renovation": {
+    "description": "Full renovation of Shiva Lingam including crack filling and sacred coating",
+    "materials": "sacred materials, lime mortar, holy ash, vermillion, gold paint",
+    "labor_days": 3,
+    "unit": "per_unit",
+    "keywords": ["lingam repair", "lingam renovation", "lingam restoration", "fix lingam", "lingam crack"]
+  },
+  "temple_bell_installation": {
+    "description": "Installation of temple bell with hanging structure",
+    "materials": "MS frame, hooks, bolts, welding materials",
+    "labor_days": 1,
+    "unit": "per_unit",
+    "keywords": ["bell", "temple bell", "bell installation", "hanging bell", "bell fixing"]
+  },
+  "carpentry_shelf": {
+    "description": "Wooden shelf construction for keeping pooja items and temple materials",
+    "materials": "teak wood, nails, varnish, hinges",
+    "labor_days": 2,
+    "unit": "per_unit",
+    "keywords": ["shelf", "wooden shelf", "carpentry", "storage", "pooja shelf", "rack", "cabinet"]
+  },
+  "carpentry_door": {
+    "description": "Wooden door construction and installation for temple or shrine",
+    "materials": "teak wood, hinges, lock, nails, varnish",
+    "labor_days": 3,
+    "unit": "per_unit",
+    "keywords": ["door", "wooden door", "carpentry door", "entrance", "temple door"]
+  },
+  "drainage_construction": {
+    "description": "Drainage channel construction around statue to prevent waterlogging",
+    "materials": "cement, sand, bricks, PVC pipes",
+    "labor_days": 3,
+    "unit": "per_meter",
+    "keywords": ["drain", "drainage", "water drain", "channel", "waterlogging", "water flow"]
+  },
+  "platform_construction": {
+    "description": "Raised platform construction for statue placement",
+    "materials": "bricks, cement, sand, tiles, steel",
+    "labor_days": 4,
+    "unit": "per_sqft",
+    "keywords": ["platform", "raised platform", "statue base", "pedestal construction", "stage"]
+  },
+  "crack_filling": {
+    "description": "Filling cracks and fractures in statue or structure surface",
+    "materials": "lime mortar, bonding agent, sealant",
+    "labor_days": 2,
+    "unit": "per_sqft",
+    "keywords": ["crack", "fracture", "split", "broken", "gap", "fissure", "crack filling"]
+  },
+  "waterproofing": {
+    "description": "Waterproofing treatment for roof or floor to prevent water seepage",
+    "materials": "waterproofing compound, membrane, brushes",
+    "labor_days": 2,
+    "unit": "per_sqft",
+    "keywords": ["waterproof", "water seepage", "leakage", "dampness", "water proof coating"]
+  },
+  "statue_base_repair": {
+    "description": "Repair and strengthening of statue base or foundation",
+    "materials": "cement, sand, steel rods, bonding agent",
+    "labor_days": 3,
+    "unit": "per_sqft",
+    "keywords": ["base repair", "foundation", "bottom repair", "pedestal repair", "unstable", "sinking"]
+  },
+  "general_repair": {
+    "description": "General repair and maintenance work on statue or temple structure",
+    "materials": "general repair materials, cement, paint",
+    "labor_days": 2,
+    "unit": "per_sqft",
+    "keywords": ["repair", "maintenance", "fix", "restore", "general work", "damage"]
+  }
+}
