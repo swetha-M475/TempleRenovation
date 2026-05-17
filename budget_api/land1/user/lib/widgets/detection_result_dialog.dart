@@ -391,40 +391,80 @@ class DetectionResultDialog extends StatelessWidget {
     );
   }
 
-  /// List of quality warnings
+  /// List of quality warnings and extra domain insights
   Widget _buildQualityWarnings() {
     final warnings = result.quality?.warnings ?? [];
-    if (warnings.isEmpty) return const SizedBox.shrink();
+    final orientation = result.orientation;
+    final domainInterp = result.domainInterpretation;
+    
+    if (warnings.isEmpty && orientation == null && domainInterp == null) return const SizedBox.shrink();
 
     return Column(
-      children: warnings.map((warning) {
-        return Container(
-          margin: const EdgeInsets.only(top: 8),
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.orange.shade50,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.orange.shade200),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(Icons.warning_amber_rounded, color: Colors.orange.shade800, size: 18),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  warning,
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: Colors.orange.shade900,
-                    height: 1.4,
+      children: [
+        ...warnings.map((warning) {
+          return Container(
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.orange.shade200),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.warning_amber_rounded, color: Colors.orange.shade800, size: 18),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    warning,
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      color: Colors.orange.shade900,
+                      height: 1.4,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          );
+        }).toList(),
+        
+        // Advanced Insights
+        if (orientation != null || domainInterp != null)
+          Container(
+            margin: const EdgeInsets.only(top: 12),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade50,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.blue.shade200),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.info_outline, color: Colors.blue, size: 18),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Advanced AI Insights",
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.blue.shade900),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                if (orientation != null)
+                  Text("• Orientation: ${orientation[0].toUpperCase()}${orientation.substring(1)}", style: GoogleFonts.poppins(fontSize: 12, color: Colors.blue.shade900)),
+                if (domainInterp != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text("• Architecture: $domainInterp", style: GoogleFonts.poppins(fontSize: 12, color: Colors.blue.shade900)),
+                  ),
+              ],
+            ),
           ),
-        );
-      }).toList(),
+      ],
     );
   }
 
@@ -432,7 +472,7 @@ class DetectionResultDialog extends StatelessWidget {
   Widget _buildActionButtons(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(top: BorderSide(color: _cardBg)),
       ),

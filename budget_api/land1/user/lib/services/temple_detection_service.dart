@@ -160,7 +160,13 @@ class TempleDetectionService {
 
     detections.sort((a, b) => b.confidence.compareTo(a.confidence));
 
-    // 4. Build Final Result
+    // 4. Parse Orientation & Domain
+    final orientData = data['orientation'] ?? {};
+    final String? orientationStr = orientData['orientation'];
+    
+    final String? domainInterp = detectionsData['domain_interpretation'];
+
+    // 5. Build Final Result
     if (!passesQualityGate) {
       return TempleDetectionResult(
         isApproved: false,
@@ -172,6 +178,8 @@ class TempleDetectionService {
         imageHeight: origHeight,
         processingTimeMs: processingTimeMs,
         quality: quality,
+        orientation: orientationStr,
+        domainInterpretation: domainInterp,
       );
     }
 
@@ -188,6 +196,8 @@ class TempleDetectionService {
         imageHeight: origHeight,
         processingTimeMs: processingTimeMs,
         quality: quality,
+        orientation: orientationStr,
+        domainInterpretation: domainInterp,
       );
     }
 
@@ -206,6 +216,8 @@ class TempleDetectionService {
       imageHeight: origHeight,
       processingTimeMs: processingTimeMs,
       quality: quality,
+      orientation: orientationStr,
+      domainInterpretation: domainInterp,
     );
   }
 

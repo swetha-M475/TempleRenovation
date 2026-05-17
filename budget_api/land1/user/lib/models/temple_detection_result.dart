@@ -76,6 +76,12 @@ class TempleDetectionResult {
   /// Image Quality Assessment (Blur, Brightness)
   final ImageQualityResult? quality;
 
+  /// Orientation detected (portrait, landscape, square)
+  final String? orientation;
+
+  /// Domain-specific interpretation of the scene (e.g. Lingam placement)
+  final String? domainInterpretation;
+
   /// Processing time in milliseconds
   final int processingTimeMs;
 
@@ -88,6 +94,8 @@ class TempleDetectionResult {
     required this.imageWidth,
     required this.imageHeight,
     this.quality,
+    this.orientation,
+    this.domainInterpretation,
     this.processingTimeMs = 0,
   });
 
