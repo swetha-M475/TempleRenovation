@@ -133,21 +133,21 @@ def check_quality_gate(quality_result: dict) -> dict:
     brightness = quality_result.get("brightness", 128)
 
     if blur < 20:
+        passes = False
+        comparison_reliable = False
         warnings.append(
             f"Extremely blurry image (blur_score={blur:.1f}). "
-            "Detection accuracy will be significantly reduced."
+            "Please hold the camera steady."
         )
-        if brightness < 30:
-            passes = False  # Too blurry AND too dark
-            comparison_reliable = False
-
-    if blur < 50:
+    elif blur < 50:
         comparison_reliable = False
         warnings.append(
             "Image blur is high. Comparison results may be unreliable."
         )
 
     if brightness < 30:
+        passes = False
+        comparison_reliable = False
         warnings.append(
             f"Very dark image (brightness={brightness:.1f}). "
             "Consider using better lighting."

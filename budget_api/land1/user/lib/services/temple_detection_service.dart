@@ -103,11 +103,13 @@ class TempleDetectionService {
     final double brightness = (qualityData['meanBrightness'] ?? 0.0).toDouble();
     final String brightnessLevel = qualityData['brightness_level'] ?? 'unknown';
     final double confidenceMultiplier = (qualityData['confidence_multiplier'] ?? 1.0).toDouble();
-    final bool passesQualityGate = qualityGate['passed'] ?? true;
+    final bool passesQualityGate = qualityGate['passes'] ?? true;
     
     final List<String> warnings = [];
-    if (qualityGate['message'] != null && qualityGate['message'].toString().isNotEmpty) {
-      warnings.add(qualityGate['message']);
+    if (qualityGate['warnings'] != null) {
+      for (var w in qualityGate['warnings']) {
+        warnings.add(w.toString());
+      }
     }
 
     final quality = ImageQualityResult(
