@@ -113,7 +113,35 @@ def _read_image(file_storage) -> np.ndarray | None:
     if not file_bytes or len(file_bytes) == 0:
         return None
     arr = np.frombuffer(file_bytes, np.uint8)
+    # Try standard OpenCV decode first
     image = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+    
+    if image is None:
+        # Fallback for HEIC/HEIF formats using pillow_heif
+        try:
+            from PIL import Image
+            import pillow_heif
+            
+            # Register HEIF opener with PIL
+            pillow_heif.register_heif_opener()
+            
+            # Read bytes using PIL
+            import io
+            pil_img = Image.open(io.BytesIO(file_bytes))
+            
+            # Convert to numpy array
+            arr_img = np.array(pil_img)
+            
+            # Convert RGB to BGR for OpenCV
+            if len(arr_img.shape) == 3 and arr_img.shape[2] >= 3:
+                image = cv2.cvtColor(arr_img, cv2.COLOR_RGB2BGR)
+            else:
+                # If grayscale, convert to BGR
+                image = cv2.cvtColor(arr_img, cv2.COLOR_GRAY2BGR)
+        except Exception as e:
+            print(f"Fallback decode failed: {e}")
+            return None
+            
     return image
 
 
@@ -151,13 +179,7 @@ def validate_upload(file_storage) -> tuple:
 
     # 3. Extension / format check
     ext = os.path.splitext(filename)[1].lower() if filename else ""
-    if ext in {".heic", ".heif"}:
-        return None, _error_response(
-            "HEIC/HEIF format is not supported. Please convert to JPEG or PNG "
-            "before uploading. On iOS, go to Settings → Camera → Formats → "
-            "Most Compatible.",
-            "UNSUPPORTED_FORMAT",
-        )
+    # Removed HEIC block to allow pillow-heif to process it
 
     content_type = file_storage.content_type or ""
     if content_type and content_type not in ALLOWED_MIME_TYPES:

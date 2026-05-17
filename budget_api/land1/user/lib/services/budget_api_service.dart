@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class BudgetApiService {
-  static const String baseUrl = "http://10.161.190.46:8000";
+  static const String baseUrl = "http://192.168.186.51:5000";
 
   static Future<Map<String, dynamic>> analyzeDamage({
     required File imageFile,

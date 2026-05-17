@@ -4,7 +4,7 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 
 class AiBillService {
   // Replace with your actual API Key
-  static const _apiKey = 'YOUR_GEMINI_API_KEY';
+  static const _apiKey = '';
 
   static Future<Map<String, dynamic>?> extractBillData(File imageFile) async {
     final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: _apiKey);

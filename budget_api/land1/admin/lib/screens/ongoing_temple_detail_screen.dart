@@ -60,65 +60,83 @@ class _OngoingTempleDetailScreenState extends State<OngoingTempleDetailScreen> {
   // --- AI Comparison Logic ---
 
   Future<void> _compareImages(String originalUrl, List<dynamic> allCompletedUrls) async {
-    int selectedIdx = 0;
-    bool isAnalyzing = false;
-    Map<String, dynamic>? analysisData;
+    bool isAnalyzing = true;
+    double avgSsim = 0.0;
+    List<String> allChanges = [];
+    String combinedInterpretation = "";
+    String? firstDiffBase64;
 
     await showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) {
           
-          Future<void> runAnalysis(int index) async {
-            setDialogState(() {
-              selectedIdx = index;
-              isAnalyzing = true;
-              analysisData = null;
-            });
-
+          Future<void> runBatchAnalysis() async {
             try {
               final resp1 = await http.get(Uri.parse(originalUrl));
-              final resp2 = await http.get(Uri.parse(allCompletedUrls[index]));
+              double totalSsim = 0.0;
 
-              final request = http.MultipartRequest('POST', Uri.parse('http://192.168.225.51:5000/api/compare'));
-              request.files.add(http.MultipartFile.fromBytes('image1', resp1.bodyBytes, filename: 'orig.jpg', contentType: MediaType('image', 'jpeg')));
-              request.files.add(http.MultipartFile.fromBytes('image2', resp2.bodyBytes, filename: 'prog.jpg', contentType: MediaType('image', 'jpeg')));
+              for (int i = 0; i < allCompletedUrls.length; i++) {
+                final resp2 = await http.get(Uri.parse(allCompletedUrls[i]));
 
-              final streamedResponse = await request.send();
-              final response = await http.Response.fromStream(streamedResponse);
+                final request = http.MultipartRequest('POST', Uri.parse('http://192.168.186.51:5000/api/compare'));
+                request.files.add(http.MultipartFile.fromBytes('image1', resp1.bodyBytes, filename: 'orig.jpg', contentType: MediaType('image', 'jpeg')));
+                request.files.add(http.MultipartFile.fromBytes('image2', resp2.bodyBytes, filename: 'prog.jpg', contentType: MediaType('image', 'jpeg')));
 
-              if (response.statusCode == 200) {
-                setDialogState(() {
-                  analysisData = json.decode(response.body);
-                  isAnalyzing = false;
-                });
-              } else {
-                throw "API Error: ${response.statusCode}";
+                final streamedResponse = await request.send();
+                final response = await http.Response.fromStream(streamedResponse);
+
+                if (response.statusCode == 200) {
+                  final analysisData = json.decode(response.body);
+                  
+                  final ssimData = analysisData['ssim'] ?? {};
+                  totalSsim += (ssimData['ssim_score'] ?? 0.0);
+                  
+                  final changes = analysisData['changes'] ?? {};
+                  final changeSummary = changes['change_summary'] ?? "";
+                  
+                  if (changeSummary.toString().isNotEmpty && changeSummary != "..." && changeSummary.toString().toLowerCase() != "none" && changeSummary.toString() != "No changes detected.") {
+                     allChanges.add("Photo ${i + 1}: $changeSummary");
+                  }
+
+                  if (firstDiffBase64 == null) {
+                    firstDiffBase64 = analysisData['diff_image_base64'];
+                    combinedInterpretation = ssimData['interpretation'] ?? "...";
+                  }
+                } else {
+                  throw "API Error: ${response.statusCode}";
+                }
               }
+
+              setDialogState(() {
+                avgSsim = (totalSsim / allCompletedUrls.length) * 100;
+                if (allChanges.isEmpty) {
+                  allChanges.add("No major structural deviations found across all photos.");
+                }
+                isAnalyzing = false;
+              });
+
             } catch (e) {
-              setDialogState(() => isAnalyzing = false);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Analysis failed: $e")));
+              if (context.mounted) {
+                setDialogState(() => isAnalyzing = false);
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Analysis failed: $e")));
+              }
             }
           }
 
-          // Run initial analysis on first load
-          if (!isAnalyzing && analysisData == null) {
-             runAnalysis(selectedIdx);
+          // Run once
+          if (isAnalyzing && avgSsim == 0.0 && allChanges.isEmpty) {
+             runBatchAnalysis();
           }
-
-          final ssimData = analysisData?['ssim'] ?? {};
-          final ssimScore = (ssimData['ssim_score'] ?? 0.0) * 100;
-          final interpretation = ssimData['interpretation'] ?? "...";
-          final changes = analysisData?['changes'] ?? {};
-          final changeSummary = changes['change_summary'] ?? "...";
-          final diffBase64 = analysisData?['diff_image_base64'];
 
           return AlertDialog(
             title: Row(
               children: [
                 const Icon(Icons.auto_awesome, color: Colors.amber),
                 const SizedBox(width: 10),
-                const Expanded(child: Text("Progress Analysis")),
+                const Expanded(child: Text("Batch Progress Analysis")),
               ],
             ),
             content: SizedBox(
@@ -128,78 +146,76 @@ class _OngoingTempleDetailScreenState extends State<OngoingTempleDetailScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Select Progress Photo to Analyze:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                    Text("Analyzing ${allCompletedUrls.length} photos against baseline...", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                     const SizedBox(height: 10),
                     SizedBox(
                       height: 60,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: allCompletedUrls.length,
-                        itemBuilder: (ctx, i) => GestureDetector(
-                          onTap: isAnalyzing ? null : () => runAnalysis(i),
-                          child: Container(
-                            margin: const EdgeInsets.only(right: 8),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: selectedIdx == i ? Colors.blue : Colors.transparent, width: 3),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: Image.network(allCompletedUrls[i], width: 60, height: 60, fit: BoxFit.cover),
-                            ),
+                        itemBuilder: (ctx, i) => Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300, width: 1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: Image.network(allCompletedUrls[i], width: 60, height: 60, fit: BoxFit.cover),
                           ),
                         ),
                       ),
                     ),
-                    const Divider(height: 30),
-                    if (isAnalyzing)
-                      const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: Column(
-                            children: [
-                              CircularProgressIndicator(),
-                              SizedBox(height: 10),
-                              Text("AI is analyzing this stage..."),
-                            ],
-                          ),
-                        ),
-                      )
-                    else if (analysisData != null) ...[
+                    const SizedBox(height: 20),
+                    if (isAnalyzing) ...[
+                      const Center(child: CircularProgressIndicator()),
+                      const SizedBox(height: 10),
+                      const Center(child: Text("Running multi-image structural comparison...", style: TextStyle(fontSize: 12, color: Colors.grey))),
+                    ] else ...[
+                      // AI RESULTS SUMMARY
                       Container(
                         padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(8)),
+                        decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.blue.shade100)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Structural Similarity: ${ssimScore.toStringAsFixed(1)}%", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            const Text("AI Analysis Summary", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
+                            const SizedBox(height: 8),
+                            Text("Avg Match Score: ${avgSsim.toStringAsFixed(1)}%", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 4),
-                            Text(interpretation, style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic)),
+                            Text("Status: $combinedInterpretation", style: const TextStyle(fontSize: 13)),
+                            const Divider(),
+                            const Text("Structural Changes Detected:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                            const SizedBox(height: 4),
+                            ...allChanges.map((change) => Padding(
+                              padding: const EdgeInsets.only(bottom: 4.0),
+                              child: Text("• $change", style: const TextStyle(fontSize: 12, color: Colors.black87)),
+                            )).toList(),
                           ],
                         ),
                       ),
                       const SizedBox(height: 15),
-                      const Text("Component Changes:", style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text(changeSummary, style: const TextStyle(fontSize: 13)),
-                      const SizedBox(height: 15),
-                      if (diffBase64 != null) ...[
-                        const Text("Difference Heatmap:", style: TextStyle(fontWeight: FontWeight.bold)),
+                      if (firstDiffBase64 != null) ...[
+                        const Text("Heatmap (First Image):", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                         const SizedBox(height: 8),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image.memory(base64Decode(diffBase64)),
+                          child: Image.memory(base64Decode(firstDiffBase64!), height: 180, width: double.infinity, fit: BoxFit.cover),
                         ),
-                      ],
-                    ],
+                      ]
+                    ]
                   ],
                 ),
               ),
             ),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text("Close")),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Close"),
+              )
             ],
           );
-        }
+        },
       ),
     );
   }

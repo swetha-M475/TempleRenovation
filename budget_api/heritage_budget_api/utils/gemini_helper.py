@@ -1,14 +1,15 @@
 import httpx
 from PIL import Image
+from dotenv import load_dotenv
 import io
 import base64
 import os
 from groq import Groq
 
 # Get API key from environment
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+load_dotenv()
 
-client = Groq(api_key=GROQ_API_KEY)
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def encode_image_to_base64(image_bytes: bytes) -> str:
     return base64.b64encode(image_bytes).decode("utf-8")

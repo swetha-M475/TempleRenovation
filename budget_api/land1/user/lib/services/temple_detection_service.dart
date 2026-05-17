@@ -29,7 +29,7 @@ class TempleDetectionService {
   // NOTE: If testing on a physical device, 127.0.0.1 won't work.
   // Replace with your laptop's local IP address (e.g., '192.168.1.5').
   // For Android emulator, '10.0.2.2' maps to the host's localhost.
-  static const String _apiUrl = 'http://192.168.225.51:5000/api/analyze';
+  static const String _apiUrl = 'http://192.168.186.51:5000/api/analyze';
 
   /// Minimum confidence for a detection to count as valid
   static const double minConfidenceThreshold = 0.20;
@@ -61,6 +61,7 @@ class TempleDetectionService {
         await http.MultipartFile.fromPath(
           'image', 
           imageFile.path,
+          filename: 'image.jpg', // Force JPG filename to bypass backend HEIC block
           contentType: MediaType('image', 'jpeg'),
         )
       );

@@ -36,7 +36,7 @@ class CreateProjectScreen extends StatefulWidget {
 }
 
 class _CreateProjectScreenState extends State<CreateProjectScreen> {
-final String _mapboxApiKey = "TOKEN";
+  final String _mapboxApiKey = "YOUR_MAPBOX_TOKEN"; // Redacted for GitHub push
 
   final _pageController = PageController();
   int _currentPage = 0;
